@@ -1,11 +1,9 @@
 %option noyywrap
-
 %{
+  #include "./sintactico.tab.h"
   #include <stdlib.h>
   #include <stdio.h>
   #include <string.h>
-  int n_cols = 0;
-  int n_filas = 0;
 %}
 
 f                       fila
@@ -26,38 +24,27 @@ valor                   {apertura_v}{texto}{cierre_v}
 valores                 {valor}*
 espacio                 [" "]
 
-m_apertura_simple       <{m}>
-m_cierre                <\/{m}>
+apertura_m_simple       <{m}>
+cierre_m                <\/{m}>
 atributo                {nombre_tag}+{espacio}*={espacio}*(\"{texto}*\"|'{texto}*')
-m_apertura_atr          <{m}({espacio}+{atributo})+{espacio}*>
-m_apertura              {m_apertura_simple}|{m_apertura_atr}
+apertura_m_atr          <{m}({espacio}+{atributo})+{espacio}*>
+apertura_m              {apertura_m_simple}|{apertura_m_atr}
 
-%%
-{m_apertura} {
-    printf("Apertura matriz: %s\n", yytext);
-}
-
-{apertura_c}{texto}{cierre_c} {
-    n_cols++;
-    printf("Columna: %s\n", yytext);
-}
-
-{apertura_f}{valores}{cierre_f} {
-    n_filas++;
-    printf("Fila: %s\n", yytext);
-}
-
-{m_cierre} {
-    printf("Cierre m: %s\n", yytext);
-}
+enter                   \n
 %%
 
-int main(int argc, char **argv) {
-    if(argc > 1) {
-        if(!(yyin = fopen(argv[1], "r"))) {
-            perror(argv[1]);
-            return EXIT_FAILURE;
-        }
-    }
-    yylex();
-}
+{apertura_m_simple} {return APERTURA_M_SIMPLE;}
+{apertura_m_atr} {yylval.str = strdup(yytext); return APERTURA_M_ATR;}
+{cierre_m} {return CIERRE_M;}
+
+{apertura_f} {return APERTURA_F;}
+{apertura_v} {return APERTURA_V;}
+{texto} {yylval.str = strdup(yytext); return TEXTO;}
+{cierre_v} {return CIERRE_V;}
+{cierre_f} {return CIERRE_F;}
+
+{apertura_c} {return APERTURA_C;}
+{cierre_c} {return CIERRE_C;}
+{enter} {}
+
+%%

@@ -1,8 +1,8 @@
 <matriz>
-<columna>nombre n</columna>
-<fila><valor>valor11</valor><valor>valor11</valor></fila>
-<fila><valor>valor 1‐1</valor><valor>valor 1‐2</valor><valor>valor 1‐n</valor></fila>
-<fila><valor>valor 2‐1</valor><valor>valor 2‐2</valor><valor>valor 2‐n</valor></fila>
-<fila><valor>valor m‐1</valor><valor>valor m‐2</valor><valor>valor m‐n</valor></fila>
-<fila></fila>
+<columna>nombre 1</columna>
+<columna>nombre 122</columna>
+<columna>nombre 132</columna>
+<fila><valor>valor 0‐1</valor><valor>valor 0‐2</valor><valor>valor 0‐3</valor></fila>
+<fila><valor>valor 1‐1</valor><valor>valor 1‐2</valor></fila>
+<fila><valor>valor 2‐1</valor></fila>
 </matriz>
