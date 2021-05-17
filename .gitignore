@@ -1,2 +1,4 @@
 *.out
 *.yy.c
+*.output
+*.tab.*
