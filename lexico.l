@@ -12,12 +12,12 @@ v                       valor
 m                       matriz
 
 nombre_tag              separador|N
-apertura_f              <f>
-apertura_c              <c>
-apertura_v              <v>
-cierre_f                <\/f>
-cierre_c                <\/c>
-cierre_v                <\/v>
+apertura_f              <{f}>
+apertura_c              <{c}>
+apertura_v              <{v}>
+cierre_f                <\/{f}>
+cierre_c                <\/{c}>
+cierre_v                <\/{v}>
 
 texto                   [^<>'"&\n]+
 espacio                 [" "]
