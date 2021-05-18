@@ -104,7 +104,6 @@ apertura_m : apertura_m_simple | apertura_m_atr;
 apertura_m_simple : APERTURA_M_SIMPLE;
 
 apertura_m_atr : APERTURA_M_ATR {
-    printf("Apertura atributo %s\n", $1);
     set_atr($1);
 };
 
