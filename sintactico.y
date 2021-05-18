@@ -7,6 +7,7 @@
   int yylex();
   extern FILE* yyin;
   int yyerror(char *s);
+  FILE* csv;
 
   int filas = 1;
   int cols = 0;
@@ -16,8 +17,10 @@
 
   int first_col = 1;
 
-  void set_atr(char *s);
+  char *csv_file = "out.csv";
 
+  void set_atr(char *s);
+  void print_val(char *s);
 %}
 
 %union {
@@ -54,9 +57,10 @@ filas : fila | filas fila;
 columna : APERTURA_C TEXTO CIERRE_C {
     if(first_col) {
         first_col = 0;
-        printf("%s", $2);
+        print_val($2);
     } else {
-        printf("%c%s", delimiter, $2);
+        fprintf(csv, "%c", delimiter);
+        print_val($2);
     }
 
     cols++;
@@ -77,18 +81,18 @@ vals : val {
 };
 
 fila : APERTURA_F vals CIERRE_F {
-    printf("\n");
-    for(int i = 0; i < $2.n_elem; i++) {
+    fprintf(csv, "\n");
+    if($2.n_elem > cols) printf("[WARNING]: La fila %d conte %d columnes i s'esperen %d columnes per fila\n", filas, $2.n_elem, cols);
+    for(int i = 0; i < $2.n_elem && i < cols; i++) {
         if(i == 0) {
-            printf("%s", $2.str_array[i]);
+            print_val($2.str_array[i]);
         } else {
-            printf("%c%s", delimiter, $2.str_array[i]);
+            fprintf(csv, "%c", delimiter);
+            print_val($2.str_array[i]);
         }
     }
 
-    for(int i = 0; i < cols - $2.n_elem - 1; i++) {
-        printf("%c", delimiter);
-    }
+    for(int i = 0; i < cols - $2.n_elem; i++) fprintf(csv, "%c", delimiter);
 
     filas++;
 };
@@ -111,6 +115,14 @@ void set_atr(char *s) {
 
 }
 
+void print_val(char *s) {
+    for (int i = 0;  s[i] != '\0' ; i++) {
+        if(s[i] != delimiter && s[i] != ' ') fprintf(csv, "%c", s[i]);
+        else fprintf(csv, "$");
+        if(s[i] == delimiter) printf("[WARNING]: L'element \"%s\" conte el separador: '%c'\n", s, delimiter);
+    }
+}
+
 int yyerror(char *s) {
     fprintf(stderr, "Error: %s\n",  s);
     exit(EXIT_FAILURE);
@@ -118,15 +130,16 @@ int yyerror(char *s) {
 
 int main(int argc, char **argv) {
     yyin = fopen(argv[1], "r");
+    csv = fopen(csv_file, "w");
     yyparse();
 
     if(max_files > -1) {
         if(filas > max_files) printf("El nombre de files es mes gran al esperat, %i > %i", filas, max_files);
         if(filas < max_files) printf("El nombre de files es mes petit al esperat, %i < %i", filas, max_files);
-        if(filas == max_files) printf("El nombre de files es l'esperat");
     }
 
-    printf("\n\nNum cols: %i", cols);
-    printf("\nNum filas: %i\n", filas);
+    printf("Num cols: %i\n", cols);
+    printf("Num filas: %i\n", filas);
+    fclose(csv);
     return 1;
 }
