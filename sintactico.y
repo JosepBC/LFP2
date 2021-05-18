@@ -6,7 +6,7 @@
 
   int yylex();
   extern FILE* yyin;
-  int yyerror(char *s);
+  int yyerror(const char *s);
   FILE* csv;
 
   int filas = 1;
@@ -82,7 +82,7 @@ vals : val {
 
 fila : APERTURA_F vals CIERRE_F {
     fprintf(csv, "\n");
-    if($2.n_elem > cols) printf("[WARNING]: La fila %d conte %d columnes i s'esperen %d columnes per fila\n", filas, $2.n_elem, cols);
+    if($2.n_elem > cols) printf("[WARNING]: La fila %d tiene %d valores más que columnas tiene la matriz\n", filas, $2.n_elem - cols);
     for(int i = 0; i < $2.n_elem && i < cols; i++) {
         if(i == 0) {
             print_val($2.str_array[i]);
@@ -118,12 +118,14 @@ void set_atr(char *s) {
 void print_val(char *s) {
     for (int i = 0;  s[i] != '\0' ; i++) {
         if(s[i] != delimiter && s[i] != ' ') fprintf(csv, "%c", s[i]);
-        else fprintf(csv, "$");
-        if(s[i] == delimiter) printf("[WARNING]: L'element \"%s\" conte el separador: '%c'\n", s, delimiter);
+        else if(s[i] == delimiter) {
+            fprintf(csv, "$");
+            printf("[WARNING]: L'element \"%s\" conte el separador: '%c'\n", s, delimiter);
+        }
     }
 }
 
-int yyerror(char *s) {
+int yyerror(const char *s) {
     fprintf(stderr, "Error: %s\n",  s);
     exit(EXIT_FAILURE);
 }
@@ -137,9 +139,6 @@ int main(int argc, char **argv) {
         if(filas > max_files) printf("El nombre de files es mes gran al esperat, %i > %i", filas, max_files);
         if(filas < max_files) printf("El nombre de files es mes petit al esperat, %i < %i", filas, max_files);
     }
-
-    printf("Num cols: %i\n", cols);
-    printf("Num filas: %i\n", filas);
     fclose(csv);
     return 1;
 }
