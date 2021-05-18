@@ -138,7 +138,7 @@ void print_val(char *s) {
         if(s[i] != delimiter && s[i] != ' ') fprintf(csv, "%c", s[i]);
         else if(s[i] == delimiter) {
             fprintf(csv, "$");
-            printf("[WARNING]: L'element \"%s\" conte el separador: '%c'\n", s, delimiter);
+            printf("[WARNING]: El elemento \"%s\" contiene el separador: '%c'\n", s, delimiter);
         }
     }
 }
@@ -154,8 +154,8 @@ int main(int argc, char **argv) {
     yyparse();
 
     if(max_files > -1) {
-        if(filas > max_files) printf("[WARNING]: El nombre de files es mes gran al esperat, %i > %i\n", filas, max_files);
-        if(filas < max_files) printf("[WARNING]: El nombre de files es mes petit al esperat, %i < %i\n", filas, max_files);
+        if(filas > max_files) printf("[WARNING]: El numero de filas es mas grande que el esperado, %i > %i\n", filas, max_files);
+        if(filas < max_files) printf("[WARNING]: El numero de filas es mas pequeño que el esperado, %i < %i\n", filas, max_files);
     }
     fclose(csv);
     return 1;
