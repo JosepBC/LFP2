@@ -9,7 +9,7 @@
   int yyerror(const char *s);
   FILE* csv;
 
-  int filas = 1;
+  int filas = 0;
   int cols = 0;
 
   char delimiter = ',';
@@ -111,9 +111,26 @@ apertura_m_atr : APERTURA_M_ATR {
 
 %%
 
-//Pillar N y/o delimiter de s y guardarlos donde toca, delimiter, max_files
-void set_atr(char *s) {
+char* get_val(char *s) {
+    char *s_cpy = (char*)calloc(sizeof(s), sizeof(char));
+    strcpy(s_cpy, s);
 
+    char *token = strtok(s_cpy, "'\"");
+    for(int i = 0; token != NULL && i < 1; i++) token = strtok(NULL, "'\"");
+
+    char *token_cpy = (char*)calloc(sizeof(token), sizeof(char));
+    strcpy(token_cpy, token);
+    return token_cpy;
+}
+
+void set_atr(char *s) {
+    for(int i = 0; s[i] != '\0'; i++) {
+        if(s[i] == '=' && s[i - 1] == 'N') max_files = atoi(get_val(&s[i]));
+        if(s[i] == '=' && s[i - 1]  == 'r') delimiter = get_val(&s[i])[0];
+    }
+
+    //printf("max_files: %d\n", max_files);
+    //printf("delim: %c\n", delimiter);
 }
 
 void print_val(char *s) {
@@ -137,8 +154,8 @@ int main(int argc, char **argv) {
     yyparse();
 
     if(max_files > -1) {
-        if(filas > max_files) printf("El nombre de files es mes gran al esperat, %i > %i", filas, max_files);
-        if(filas < max_files) printf("El nombre de files es mes petit al esperat, %i < %i", filas, max_files);
+        if(filas > max_files) printf("[WARNING]: El nombre de files es mes gran al esperat, %i > %i\n", filas, max_files);
+        if(filas < max_files) printf("[WARNING]: El nombre de files es mes petit al esperat, %i < %i\n", filas, max_files);
     }
     fclose(csv);
     return 1;

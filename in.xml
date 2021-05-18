@@ -1,8 +1,9 @@
-<matriz>
+<matriz separador=',' N="3">
 <columna>nombre 1</columna>
 <columna>nombre 122</columna>
 <columna>nom,bre 132</columna>
 <fila><valor>va,lor 0‐1</valor><valor>valor 0‐2</valor><valor>valor 0‐3</valor><valor>patata</valor></fila>
 <fila><valor>valor 1‐1</valor><valor>valor 1‐2</valor></fila>
+<fila><valor>valor 2‐1</valor></fila>
 <fila><valor>valor 2‐1</valor></fila>
 </matriz>

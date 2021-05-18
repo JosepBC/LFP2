@@ -24,7 +24,7 @@ espacio                 [" "]
 
 apertura_m_simple       <{m}>
 cierre_m                <\/{m}>
-atributo                {nombre_tag}+{espacio}*={espacio}*(\"{texto}*\"|'{texto}*')
+atributo                {nombre_tag}+=(\"{texto}*\"|'{texto}*')
 apertura_m_atr          <{m}({espacio}+{atributo})+{espacio}*>
 
 enter                   \n
