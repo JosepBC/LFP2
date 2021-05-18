@@ -48,7 +48,9 @@
 %type<str_array> vals
 
 %%
-start : apertura_m columnas filas cierre_m | apertura_m cierre_m {yyerror("Matriz vacia");};
+start : apertura_m columnas filas cierre_m | 
+    apertura_m cierre_m {yyerror("Matriz vacia");} |
+    apertura_m columnas cierre_m {printf("[WARNING]: El fichero solo contiene columnas\n");};
 
 columnas : columna | columnas columna;
 
